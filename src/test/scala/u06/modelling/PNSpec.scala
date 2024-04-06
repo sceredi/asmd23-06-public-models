@@ -15,7 +15,7 @@ class PNSpec extends AnyFunSuite:
       MSet(C, T),
       MSet(T),
       MSet(C),
-      MSet()
+      MSet(),
     )
     val expected2 = List(
       MSet(N, N),
@@ -24,7 +24,7 @@ class PNSpec extends AnyFunSuite:
       MSet(C, T),
       MSet(T),
       MSet(C),
-      MSet()
+      MSet(),
     )
     val expected3 = List(
       MSet(N, N),
@@ -33,7 +33,7 @@ class PNSpec extends AnyFunSuite:
       MSet(N),
       MSet(T),
       MSet(C),
-      MSet()
+      MSet(),
     )
 
     pnME.paths(MSet(N, N), 7).toSet should be:
@@ -44,11 +44,11 @@ class PNSpec extends AnyFunSuite:
   ):
     import pc.examples.PNReadersWriters.*
 
-    val illegalStates = List(MSet(Writing, Writing), MSet(Writing, Reading))
-    pnRW.paths(MSet(Resource, Idle, Idle), 15).toSet.foreach { state =>
-      state forall { mset =>
-        illegalStates forall { illegal =>
-          mset.extract(illegal).isEmpty
-        }
-      } should be(true)
-    }
+    val illegalStates = List(
+      MSet(Writing, Writing),
+      MSet(Writing, Reading),
+    )
+    pnRW
+      .paths(MSet(Resource, Idle, Idle), 15)
+      .containsAny(illegalStates*) should be(false)
+end PNSpec

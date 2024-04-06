@@ -3,6 +3,7 @@ package pc.examples
 export pc.modelling.PetriNet
 
 import pc.utils.MSet
+import pc.utils.MSet.ofList
 
 object PNReadersWriters:
   enum Place:
@@ -20,9 +21,23 @@ object PNReadersWriters:
     MSet(Resource, WaitingRead) ~~> MSet(Resource, Reading),
     MSet(Reading) ~~> MSet(Idle),
     MSet(Resource, WaitingWrite) ~~> MSet(Writing) ^^^ MSet(Reading),
-    MSet(Writing) ~~> MSet(Resource, Idle)
+    MSet(Writing) ~~> MSet(Resource, Idle),
   ).toSystem
+
+  def of(n: Int)(depth: Int) =
+    pnRW.paths(ofList(List.fill(n)(Idle) ++ List(Resource)), depth)
+
+  extension (self: Seq[List[MSet[Place]]])
+    def containsAny(places: MSet[Place]*) =
+      !self.toSet.forall { state =>
+        state forall { mset =>
+          places forall { place =>
+            mset.extract(place).isEmpty
+          }
+        }
+      }
+end PNReadersWriters
 
 @main def mainPNReadersWriters =
   import PNReadersWriters.*
-  println(pnRW.paths(MSet(Idle, Idle, Resource), 9).toList.mkString("\n"))
+  println(of(2)(25).mkString("\n"))
