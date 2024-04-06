@@ -19,3 +19,4 @@ class SystemChannelSpec extends AnyFunSuite:
       List(IDLE, SEND, SEND)
     channel.completePathsUpToDepth(IDLE, 4) should contain theSameElementsAs:
       List(List(IDLE, SEND, DONE), List(IDLE, SEND, SEND, DONE))
+end SystemChannelSpec

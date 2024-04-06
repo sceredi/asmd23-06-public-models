@@ -16,8 +16,9 @@ object PNMutualExclusion:
   def pnME = PetriNet[Place](
     MSet(N) ~~> MSet(T),
     MSet(T) ~~> MSet(C) ^^^ MSet(C),
-    MSet(C) ~~> MSet()
+    MSet(C) ~~> MSet(),
   ).toSystem
+end PNMutualExclusion
 
 @main def mainPNMutualExclusion =
   import PNMutualExclusion.*

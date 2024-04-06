@@ -19,14 +19,27 @@ object SystemMutualExclusion:
 
   // System specification, try to capture the abstraction a bit
   def mutualExclusion: System[States] = l =>
-    move(l)(N, T) ++ move(l)(C, N) ++ (if (l.contains(C)) Set() else move(l)(T, C))
+    move(l)(N, T) ++ move(l)(C, N) ++ (if l.contains(C) then Set()
+                                       else move(l)(T, C))
+end SystemMutualExclusion
 
 @main def mainSystemMutualExclusion() =
   import SystemMutualExclusion.*
-  println(mutualExclusion.next(List(N,N,N)))
-  println(mutualExclusion.next(List(N,T,T)))
-  println(mutualExclusion.next(List(N,T,C)))
+  println(mutualExclusion.next(List(N, N, N)))
+  println(mutualExclusion.next(List(N, T, T)))
+  println(mutualExclusion.next(List(N, T, C)))
 
-  println(mutualExclusion.paths(List(N,N,N),5).toList)
-  println(mutualExclusion.paths(List(N,N,N),5).contains:
-    List(List(N, N, N), List(T, N, N), List(T, T, N), List(C, T, N), List(N, T, N)))
+  println(mutualExclusion.paths(List(N, N, N), 5).toList)
+  println(
+    mutualExclusion
+      .paths(List(N, N, N), 5)
+      .contains:
+        List(
+          List(N, N, N),
+          List(T, N, N),
+          List(T, T, N),
+          List(C, T, N),
+          List(N, T, N),
+        )
+  )
+end mainSystemMutualExclusion

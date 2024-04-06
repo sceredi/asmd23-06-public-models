@@ -19,3 +19,4 @@ object System:
   // Extensional with varargs
   def ofTransitions[S](rel: (S, S)*): System[S] =
     ofRelation(rel.toSet)
+

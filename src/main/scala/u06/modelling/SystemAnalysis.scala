@@ -24,4 +24,5 @@ object SystemAnalysis:
     // complete paths with length '<= depth' (could be optimised)
     def completePathsUpToDepth(s: S, depth: Int): Seq[Path[S]] =
       (1 to depth).to(LazyList) flatMap (paths(s, _)) filter (complete(_))
-
+  end extension
+end SystemAnalysis
