@@ -2,12 +2,12 @@ package pc.utils
 
 // A multiset datatype
 trait MSet[A] extends (A => Int):
-  def union(m: MSet[A]): MSet[A]
-  def diff(m: MSet[A]): MSet[A]
-  def disjoined(m: MSet[A]): Boolean
+  infix def union(m: MSet[A]): MSet[A]
+  infix def diff(m: MSet[A]): MSet[A]
+  infix def disjoined(m: MSet[A]): Boolean
   def size: Int
   def matches(m: MSet[A]): Boolean
-  def extract(m: MSet[A]): Option[MSet[A]]
+  infix def extract(m: MSet[A]): Option[MSet[A]]
   def asList: List[A]
   def asMap: Map[A,Int]
   def iterator: Iterator[A]
@@ -27,12 +27,12 @@ object MSet:
       asMap.toList.flatMap((a,n) => List.fill(n)(a))
 
     override def apply(v1: A) = asMap.getOrElse(v1,0)
-    override def union(m: MSet[A]) = new MSetImpl[A](asList ++ m.asList)
-    override def diff(m: MSet[A]) = new MSetImpl[A](asList diff m.asList)
-    override def disjoined(m: MSet[A]) = (asList intersect m.asList).isEmpty
+    override infix def union(m: MSet[A]) = new MSetImpl[A](asList ++ m.asList)
+    override infix def diff(m: MSet[A]) = new MSetImpl[A](asList diff m.asList)
+    override infix def disjoined(m: MSet[A]) = (asList intersect m.asList).isEmpty
     override def size = asList.size
     override def matches(m: MSet[A]) = extract(m).isDefined
-    override def extract(m: MSet[A]) =
+    override infix def extract(m: MSet[A]) =
       Some(this diff m) filter (_.size == size - m.size)
     override def iterator = asMap.keysIterator
     override def toString = s"{${asList.mkString("|")}}"
