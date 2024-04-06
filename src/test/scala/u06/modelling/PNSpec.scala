@@ -44,9 +44,11 @@ class PNSpec extends AnyFunSuite:
   ):
     import pc.examples.PNReadersWriters.*
 
-    val illegalState = MSet(Reading, Reading, Resource)
-
+    val illegalStates = List(MSet(Writing, Writing), MSet(Writing, Reading))
     pnRW.paths(MSet(Resource, Idle, Idle), 15).toSet.foreach { state =>
-      println(state)
-      state contains illegalState should be(false)
+      state forall { mset =>
+        illegalStates forall { illegal =>
+          mset.extract(illegal).isEmpty
+        }
+      } should be(true)
     }
