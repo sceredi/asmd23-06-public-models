@@ -40,4 +40,4 @@ end PNReadersWriters
 
 @main def mainPNReadersWriters =
   import PNReadersWriters.*
-  println(of(2)(25).mkString("\n"))
+  println(of(2)(9).mkString("\n"))

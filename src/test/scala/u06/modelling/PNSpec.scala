@@ -48,7 +48,6 @@ class PNSpec extends AnyFunSuite:
       MSet(Writing, Writing),
       MSet(Writing, Reading),
     )
-    pnRW
-      .paths(MSet(Resource, Idle, Idle), 15)
+    of(2)(15)
       .containsAny(illegalStates*) should be(false)
 end PNSpec
