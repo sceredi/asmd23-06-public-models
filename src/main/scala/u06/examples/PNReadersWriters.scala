@@ -24,6 +24,17 @@ object PNReadersWriters:
     MSet(Writing) ~~> MSet(Resource, Idle),
   ).toSystem
 
+  def pnRWReadersWillAlwaysRead = PetriNet[Place](
+    MSet(Idle) ~~> MSet(Entering),
+    MSet(Entering) ~~> MSet(WaitingRead),
+    MSet(Entering) ~~> MSet(WaitingWrite),
+    MSet(Resource, WaitingRead) ~~> MSet(Resource, Reading),
+    MSet(Reading) ~~> MSet(Idle),
+    MSet(Resource, WaitingWrite) ~~> MSet(Writing)
+      ^^^ MSet(Reading, WaitingRead),
+    MSet(Writing) ~~> MSet(Resource, Idle),
+  ).toSystem
+
   def of(n: Int)(depth: Int) =
     pnRW.paths(ofList(List.fill(n)(Idle) ++ List(Resource)), depth)
 
@@ -41,3 +52,8 @@ end PNReadersWriters
 @main def mainPNReadersWriters =
   import PNReadersWriters.*
   println(of(2)(9).mkString("\n"))
+  println(
+    pnRWReadersWillAlwaysRead
+      .paths(ofList(List.fill(3)(Idle) ++ List(Resource)), 10)
+      .mkString("\n")
+  )

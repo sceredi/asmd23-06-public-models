@@ -50,4 +50,25 @@ class PNSpec extends AnyFunSuite:
     )
     of(2)(15)
       .containsAny(illegalStates*) should be(false)
+
+  test("PN where readers eventually surely does so"):
+    import pc.examples.PNReadersWriters.*
+    val illegalTransition =
+      (MSet(WaitingRead, WaitingWrite), MSet(WaitingRead, Writing))
+    pnRWReadersWillAlwaysRead.paths(
+      MSet.ofList(List.fill(3)(Idle) ++ List(Resource)),
+      15,
+    ) forall { state =>
+      def doLegalityCheck(l: List[MSet[Place]]): Boolean =
+        l match
+          case x1 :: x2 :: xs
+              if (x1.extract(illegalTransition._1).isDefined)
+                && (x2.extract(illegalTransition._2).isDefined) =>
+            false && doLegalityCheck(x2 :: xs)
+          case _ :: xs => doLegalityCheck(xs)
+          case _       => true
+      end doLegalityCheck
+      doLegalityCheck(state)
+    } should be(true)
+
 end PNSpec
