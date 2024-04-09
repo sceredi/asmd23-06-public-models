@@ -30,7 +30,11 @@ object PNReadersWriters:
     MSet(Entering) ~~> MSet(WaitingWrite),
     MSet(Resource, WaitingRead) ~~> MSet(Resource, Reading) ^^^ MSet(Writing),
     MSet(Reading) ~~> MSet(Idle),
-    MSet(Resource, WaitingWrite) ~~> MSet(Writing) ^^^ MSet(Reading),
+    MSet(Resource, WaitingWrite) ~~> MSet(Resource, Writing) ^^^ MSet(
+      Reading,
+      Writing,
+      Writing,
+    ),
     MSet(Writing) ~~> MSet(Resource, Idle),
   ).toSystem
 
@@ -61,9 +65,14 @@ end PNReadersWriters
 
 @main def mainPNReadersWriters =
   import PNReadersWriters.*
-  println(of(2)(9).mkString("\n"))
+  // println(of(2)(9).mkString("\n"))
+  // println(
+  //   pnRWReadersWillAlwaysRead
+  //     .paths(ofList(List.fill(3)(Idle) ++ List(Resource)), 10)
+  //     .mkString("\n")
+  // )
   println(
-    pnRWReadersWillAlwaysRead
-      .paths(ofList(List.fill(3)(Idle) ++ List(Resource)), 10)
+    pnRWMultipleWriters
+      .paths(MSet.ofList(List.fill(3)(Idle) ++ List(Resource)), 10)
       .mkString("\n")
   )

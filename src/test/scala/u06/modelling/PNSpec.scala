@@ -79,7 +79,7 @@ class PNSpec extends AnyFunSuite:
       MSet(Writing, Reading),
     )
     pnRWMultipleWriters
-      .paths(MSet.ofList(List.fill(3)(Idle) ++ List.fill(2)(Resource)), 15)
+      .paths(MSet.ofList(List.fill(3)(Idle) ++ List(Resource)), 15)
       .containsAny(illegalStates*) should be(false)
 
 end PNSpec
