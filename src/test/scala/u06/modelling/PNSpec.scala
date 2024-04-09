@@ -2,6 +2,7 @@ package pc.modelling
 
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers.*
+import pc.examples.PNReadersWriters.pnRW
 
 class PNSpec extends AnyFunSuite:
 
@@ -70,5 +71,15 @@ class PNSpec extends AnyFunSuite:
       end doLegalityCheck
       doLegalityCheck(state)
     } should be(true)
+
+  test("PN rw where at most 2 writers can write at the same time"):
+    import pc.examples.PNReadersWriters.*
+    val illegalStates = List(
+      MSet(Writing, Writing, Writing),
+      MSet(Writing, Reading),
+    )
+    pnRWMultipleWriters
+      .paths(MSet.ofList(List.fill(3)(Idle) ++ List.fill(2)(Resource)), 15)
+      .containsAny(illegalStates*) should be(false)
 
 end PNSpec

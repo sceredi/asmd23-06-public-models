@@ -24,6 +24,16 @@ object PNReadersWriters:
     MSet(Writing) ~~> MSet(Resource, Idle),
   ).toSystem
 
+  def pnRWMultipleWriters = PetriNet[Place](
+    MSet(Idle) ~~> MSet(Entering),
+    MSet(Entering) ~~> MSet(WaitingRead),
+    MSet(Entering) ~~> MSet(WaitingWrite),
+    MSet(Resource, WaitingRead) ~~> MSet(Resource, Reading) ^^^ MSet(Writing),
+    MSet(Reading) ~~> MSet(Idle),
+    MSet(Resource, WaitingWrite) ~~> MSet(Writing) ^^^ MSet(Reading),
+    MSet(Writing) ~~> MSet(Resource, Idle),
+  ).toSystem
+
   def pnRWReadersWillAlwaysRead = PetriNet[Place](
     MSet(Idle) ~~> MSet(Entering),
     MSet(Entering) ~~> MSet(WaitingRead),
