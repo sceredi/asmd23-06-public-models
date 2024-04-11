@@ -13,12 +13,19 @@ object PetriNet:
 
   // factory of a System, as a toSystem method
   extension [P](pn: PetriNet[P])
-    def toSystem: System[Marking[P]] = m =>
-      for
-        Trn(cond, eff, inh) <- pn // get any transition
-        if m disjoined inh // check inhibition
-        out <- m extract cond // remove precondition
-      yield out union eff // add effect
+    def toSystem: System[Marking[P]] =
+      import collection.mutable.Map
+      val cache: Map[Marking[P], Set[Marking[P]]] = Map.empty
+      m =>
+        if cache contains m then cache(m)
+        else
+          val result = for
+            Trn(cond, eff, inh) <- pn // get any transition
+            if m disjoined inh // check inhibition
+            out <- m extract cond // remove precondition
+          yield out union eff // add effect
+          cache.update(m, result)
+          result
 
   // fancy syntax to create transition rules
   extension [P](self: Marking[P]) def ~~>(y: Marking[P]) = Trn(self, y, MSet())
